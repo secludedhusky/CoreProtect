@@ -26,3 +26,14 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build
         run: mvn -B verify
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          # artifact name includes the run number so each run is unique
+          name: coreprotect-artifacts-${{ github.run_number }}
+          # upload the whole target directory and any jar files under nested modules
+          path: |
+            target
+            **/target/*.jar
+          # don't fail the job if no files are found; just warn
+          if-no-files-found: warn
